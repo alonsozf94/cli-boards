@@ -14,6 +14,6 @@ class Checklist
   end
 
   def to_json(_generator)
-    { title: @title, completed: @completed }
+    { title: @title, completed: @completed }.to_json
   end
 end

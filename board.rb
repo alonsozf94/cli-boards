@@ -22,6 +22,6 @@ class Board
   end
 
   def to_json(_generator)
-    { id: @id, name: @name, description: @description, lists: @lists }
+    { id: @id, name: @name, description: @description, lists: @lists }.to_json
   end
 end

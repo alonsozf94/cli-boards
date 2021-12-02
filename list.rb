@@ -17,7 +17,7 @@ class List
   end
 
   def to_json(_generator)
-    { id: @id, name: @name, cards: @cards}
+    { id: @id, name: @name, cards: @cards }.to_json
   end
 
 end
