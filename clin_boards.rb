@@ -3,6 +3,7 @@ require "terminal-table"
 require_relative "store"
 
 class ClinBoards
+
   def initialize
     # Complete this
     @store = Store.new("store.json")
@@ -17,19 +18,17 @@ class ClinBoards
                   title: "CLIn Boards",
                   headings: ["ID", "Name", "Description", "List(#cards)"])
       action, id = menu(["create", "show ID", "update ID", "delete ID"])
-
       case action
       when "create" then puts "Its creating"
       when "show" then puts "Its showing"
       when "update" then puts "Its updating"
-      when "delete" then puts "Its deleting"
+      when "delete" then puts "Its deleting"       
       when "exit"
         puts "Goodbye"
       else
         puts "Invalid action"
       end
     end
-
   end
 
   private
@@ -51,7 +50,6 @@ class ClinBoards
 
   def show_board(id)
   end
-
 
 end
 
