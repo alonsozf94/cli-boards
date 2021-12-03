@@ -3,8 +3,8 @@ require_relative "card"
 
 class List
   attr_reader :id, :name, :cards
+
   @@id_count = 0
-  
   def initialize(name:, id: nil, cards: [])
     @id = id ? id : @@id_count.next
     @@id_count = id

@@ -1,12 +1,13 @@
 require "json"
-require_relative "clin_boards"
+require_relative "board"
+
 class Store
-    attr :board
+    attr_reader :boards
 
     # Store related
-    def inititalize(filename)
+    def initialize(filename)
       @filename = filename
-      @board = load_board
+      @boards = load_board
     end
 
     # List related
@@ -22,7 +23,7 @@ class Store
     end
 
     def load_board
-      data = JSON.parse(File.read("store.json"), {symbolize_names: true})
+      data = JSON.parse(File.read(@filename), { symbolize_names: true })
       data.map do |board_data|
         Board.new(board_data)
       end

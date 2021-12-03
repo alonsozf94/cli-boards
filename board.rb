@@ -9,6 +9,7 @@ class Board
     @id = id ? id : @@id_count.next
     @@id_count = id
     @name = name
+    @description = description
     @lists = lists.map { |list_data| List.new(list_data)}
   end
 
@@ -18,7 +19,7 @@ class Board
   end
 
   def details
-    #TODO
+    [@id, @name, @description, "test"]
   end
 
   def to_json(_generator)
