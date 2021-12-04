@@ -24,7 +24,7 @@ class ClinBoards
 
       # Executes action
       case action
-      when "create" then puts "Its creating"
+      when "create" then add_board
       when "show" then show_board(id)
       when "update" then puts "Its updating"
       when "delete" then puts "Its deleting"       
@@ -104,7 +104,17 @@ class ClinBoards
     #card.each_with_index { |check, index| puts "#{check.completed ? '[x]' : '[ ]'} #{index + 1}. #{check.title}" }
   end
 
-  # For lists
+  # Creating objects
+
+  def add_board
+    print "Name: "
+    name = gets.chomp
+    print "Description: "
+    description = gets.chomp
+
+    new_board = Board.new(name: name, description: description)
+    @store.add_board(new_board)
+  end
 
   def add_list(board)
     print "Name: "
@@ -113,8 +123,6 @@ class ClinBoards
     new_list = List.new(name: name)
     @store.add_list(new_list, board)
   end
-
-  # For cards
 
   def add_card(board)
     list_array = board.lists.map { |list| list.name }
@@ -133,8 +141,6 @@ class ClinBoards
     new_card = Card.new(title: title, members: members, labels: labels, due_date: due_date)
     @store.add_card(new_card, list_name, board)
   end
-
-  # For checklist
 
   def add_check_item(card)
     print "Title: "

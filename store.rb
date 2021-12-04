@@ -10,6 +10,11 @@ class Store
     end
 
     # Board related
+    def add_board(new_board)
+      @boards.push(new_board)
+      save
+    end
+
     def find_board(id)
       @boards.find { |board| board.id == id }
     end
