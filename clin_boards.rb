@@ -39,6 +39,7 @@ class ClinBoards
   private
 
   # Showing Data
+
   def show_board(id)
     # Creates board object
     board = @store.find_board(id)
@@ -60,10 +61,10 @@ class ClinBoards
 
       # Executes action
       case action
-      when "create-list" then puts "Creates list"
+      when "create-list" then add_list(board)
       when "update-list" then puts "Updates list"
       when "delete-list" then puts "Deletes list"
-      when "create-card" then puts "Creates card"  
+      when "create-card" then add_card(board)  
       when "checklist" then show_card_checklist(id.to_i, board)
       when "update-card" then puts "Updates card"
       when "delete-card" then puts "Deletes card"
@@ -94,7 +95,7 @@ class ClinBoards
 
       # Executes action
       case action
-      when "add" then puts "Adds checklist"
+      when "add" then add_check_item(card)
       when "toggle" then puts "Toggles checklist"
       when "delete" then puts "Delete checklist"
       when "back" then next
@@ -103,7 +104,47 @@ class ClinBoards
     #card.each_with_index { |check, index| puts "#{check.completed ? '[x]' : '[ ]'} #{index + 1}. #{check.title}" }
   end
 
+  # For lists
+
+  def add_list(board)
+    print "Name: "
+    name = gets.chomp
+
+    new_list = List.new(name: name)
+    @store.add_list(new_list, board)
+  end
+
+  # For cards
+
+  def add_card(board)
+    list_array = board.lists.map { |list| list.name }
+    print_menu("Select a list: \n", list_array)
+    print "> "
+    list_name = gets.chomp
+    print "Title: "
+    title = gets.chomp
+    print "Members: "
+    members = gets.chomp.split(", ").map(&:strip)
+    print "Labels: "
+    labels = gets.chomp.split(", ").map(&:strip)
+    print "Due Date: "
+    due_date = gets.chomp.split(", ")
+
+    new_card = Card.new(title: title, members: members, labels: labels, due_date: due_date)
+    @store.add_card(new_card, list_name, board)
+  end
+
+  # For checklist
+
+  def add_check_item(card)
+    print "Title: "
+    title = gets.chomp
+    new_check_item = Check_Item.new(title: title)
+    @store.add_check_item(new_check_item, card)
+  end
+
   # Tables and input
+
   def print_table(list:, title:, headings:)
     table = Terminal::Table.new
     table.title = title

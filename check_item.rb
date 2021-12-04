@@ -1,9 +1,9 @@
 require "json"
 
-class Checklist
+class Check_Item
   attr_reader :title, :completed
 
-  def initialize(title:, completed:)
+  def initialize(title:, completed: false)
     @title = title
     @completed = completed
   end

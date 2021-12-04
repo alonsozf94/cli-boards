@@ -1,6 +1,5 @@
 require "json"
 require_relative "board"
-require_relative "card"
 
 class Store
     attr_reader :boards
@@ -16,8 +15,26 @@ class Store
     end
 
     # List related
+    def add_list(new_list, board)
+      board.lists.push(new_list)
+      save
+    end
+    
+    def find_list(name, board)
+      list_array = []
+      board.lists.each do |list|
+        list_array.push(list)
+      end
+      list_array.find { |list| list.name == name}
+    end
 
     # Card related
+    def add_card(new_card, list_name, board)
+      list = find_list(list_name, board)
+      list.cards.push(new_card)
+      save
+    end
+
     def find_card(id, board)
       card_array = []
       board.lists.each do |list|
@@ -34,19 +51,16 @@ class Store
       save
     end
 
-    def update_card(id, data)
-      card = find_card(id)
-      card.update(data)
+    # Checklist related
+    def add_check_item(new_item, card)
+      card.checklist.push(new_item)
       save
     end
-
-    # Checklist related
-
 
     private
 
     def save
-      File.write(@filename, board.to_json)
+      File.write(@filename, @boards.to_json)
     end
 
     def load_board
@@ -56,7 +70,3 @@ class Store
       end
     end
 end
-
-#obj = Store.new("store.json")
-#board = obj.find_board(1)
-#p obj.find_card(8, board)

@@ -13,28 +13,6 @@ class List
     @cards = cards.map { |card_data| Card.new(card_data)}
   end
 
-  def create
-    @name = ""
-    while @name.empty?
-      puts "Name: "
-      @name = gets.chomp
-    end
-
-  end
-
-  def print_list
-    print_table(title: "#{@name}",
-                headings: ["ID", "Title", "Members", "Labels", "Due Date", "Checklist"])
-  end
-
-  def print_table(title:, headings:)
-    table = Terminal::Table.new
-    table.title = title
-    table.headings = headings
-    table.rows = list.map(&:details)
-    puts table
-  end
-
   def update(name:)
     @name = name unless name.empty?
   end
