@@ -6,8 +6,8 @@ class Card
   @@id_count = 0
 
   def initialize(title:, id: nil, members:, labels:, due_date:, checklist: [])
-    @id = id ? id : @@id_count
-    @@id_count = id
+    @id = id ? id : @@id_count.next
+    @@id_count += 1
     @title = title
     @members = members
     @labels = labels
@@ -15,7 +15,7 @@ class Card
     @checklist = checklist.map { |checklist_data| Check_Item.new(checklist_data) }
   end
 
-  def update(list:, title:, members:, labels:, due_date:)
+  def update(title:, members:, labels:, due_date:)
     #TODO
     @title = title unless title.empty?
     @members = members unless members.empty?

@@ -7,7 +7,7 @@ class Board
 
   def initialize(name:, description:, id: nil, lists: [])
     @id = id ? id : @@id_count.next
-    @@id_count = id
+    @@id_count += 1
     @name = name
     @description = description
     @lists = lists.map { |list_data| List.new(list_data) } # Creates an array of List objects

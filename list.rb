@@ -1,24 +1,24 @@
 require "json"
 require_relative "card"
-require "terminal-table"
 
 class List
-  attr_reader :id, :name, :cards
+  attr_reader :id, :name, :description, :cards
   @@id_count = 0
 
   def initialize(id: nil, name:, cards: [])
     @id = id ? id : @@id_count.next
-    @@id_count = id
+    @@id_count += 1
     @name = name
     @cards = cards.map { |card_data| Card.new(card_data)}
   end
 
-  def update(name:)
+  def update(name:, description:)
     @name = name unless name.empty?
+    @description = description unless description.empty?
   end
 
   def details
-    [@id, @title]
+    [@id, @title, @description]
   end
 
   def to_json(_generator)

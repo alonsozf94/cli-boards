@@ -26,8 +26,8 @@ class ClinBoards
       case action
       when "create" then add_board
       when "show" then show_board(id)
-      when "update" then puts "Its updating"
-      when "delete" then puts "Its deleting"       
+      when "update" then update_board(id)
+      when "delete" then delete_board(id)      
       when "exit"
         puts "Goodbye"
       else
@@ -39,6 +39,7 @@ class ClinBoards
   private
 
   # Showing Data
+  # ---------------------
 
   def show_board(id)
     # Creates board object
@@ -62,12 +63,12 @@ class ClinBoards
       # Executes action
       case action
       when "create-list" then add_list(board)
-      when "update-list" then puts "Updates list"
-      when "delete-list" then puts "Deletes list"
+      when "update-list" then update_list(id, board)
+      when "delete-list" then delete_list(id, board)
       when "create-card" then add_card(board)  
       when "checklist" then show_card_checklist(id.to_i, board)
-      when "update-card" then puts "Updates card"
-      when "delete-card" then puts "Deletes card"
+      when "update-card" then update_card(id, board)
+      when "delete-card" then delete_card(id, board)
       when "back" then next
       else puts "Invalid action"
       end
@@ -84,7 +85,7 @@ class ClinBoards
       # Prints card information
       puts "Card: #{card.title}"
       card.checklist.each_with_index do |item, index|
-        puts "#{index + 1}. #{item.title}"
+        puts "#{item.completed ? '[x]' : '[ ]'} #{index + 1}. #{item.title}"
       end
 
       # Prints menu and gets input
@@ -96,35 +97,35 @@ class ClinBoards
       # Executes action
       case action
       when "add" then add_check_item(card)
-      when "toggle" then puts "Toggles checklist"
-      when "delete" then puts "Delete checklist"
+      when "toggle" then puts toggle(id, card)
+      when "delete" then delete_check_item(id, card)
       when "back" then next
       end
     end
     #card.each_with_index { |check, index| puts "#{check.completed ? '[x]' : '[ ]'} #{index + 1}. #{check.title}" }
   end
 
-  # Creating objects
 
-  def add_board
+  # Object Forms
+  # ---------------------
+
+  def board_form
     print "Name: "
     name = gets.chomp
     print "Description: "
     description = gets.chomp
-
-    new_board = Board.new(name: name, description: description)
-    @store.add_board(new_board)
+    { name: name, description: description }
   end
 
-  def add_list(board)
+  def list_form
     print "Name: "
     name = gets.chomp
-
-    new_list = List.new(name: name)
-    @store.add_list(new_list, board)
+    print "Description: "
+    description = gets.chomp
+    { name: name , description: description}
   end
 
-  def add_card(board)
+  def card_form(board)
     list_array = board.lists.map { |list| list.name }
     print_menu("Select a list: \n", list_array)
     print "> "
@@ -136,10 +137,30 @@ class ClinBoards
     print "Labels: "
     labels = gets.chomp.split(", ").map(&:strip)
     print "Due Date: "
-    due_date = gets.chomp.split(", ")
+    due_date = gets.chomp
 
-    new_card = Card.new(title: title, members: members, labels: labels, due_date: due_date)
-    @store.add_card(new_card, list_name, board)
+    [{ title: title, members: members, labels: labels, due_date: due_date }, list_name]
+  end
+
+  # Creating objects
+  # ---------------------
+
+  def add_board
+    new_data = board_form
+    new_board = Board.new(new_data)
+    @store.add_board(new_board)
+  end
+
+  def add_list(board)
+    new_data = list_form
+    new_list = List.new(new_data)
+    @store.add_list(new_list, board)
+  end
+
+  def add_card(board)  
+    new_data = card_form(board)
+    new_card = Card.new(new_data[0])
+    @store.add_card(new_card, new_data[1], board)
   end
 
   def add_check_item(card)
@@ -149,7 +170,61 @@ class ClinBoards
     @store.add_check_item(new_check_item, card)
   end
 
+
+  # Updating objects
+  # ---------------------
+
+  def update_board(id)
+    new_data = board_form
+    @store.update_board(id, new_data)
+  end
+
+  def update_list(list_name, board)
+    new_data = list_form
+    @store.update_list(list_name, new_data, board.id)
+  end
+
+  def update_card(id, board)
+    new_data = card_form(board)
+    @store.update_card(id, new_data[0], board.id)
+  end
+
+  def toggle(index, card)
+    puts "test"
+    #@store.each do |item|
+    #  next unless item.id == id_board.to_i
+#
+    #  item.lists.each do |list|
+    #    list.cards.each do |card|
+    #      next unless card.id == id_list.to_i
+#
+    #      toggle_check(card, index)
+    #    end
+    #  end
+    #end
+  end
+
+  # Deleting objects
+  # ---------------------
+
+  def delete_board(id)
+    @store.delete_board(id)
+  end
+
+  def delete_list(list_name, board)
+    @store.delete_list(list_name, board)
+  end
+
+  def delete_card(id, board)
+    @store.delete_card(id, board)
+  end
+
+  def delete_check_item(index, card)
+    @store.delete_check_item(index, card)
+  end
+
   # Tables and input
+  # ---------------------
 
   def print_table(list:, title:, headings:)
     table = Terminal::Table.new
@@ -165,8 +240,12 @@ class ClinBoards
 
   def get_action
     print "> "
-    action, id = gets.chomp.split # "show 1" -> ["show", "1"]
-    [action, id.to_i]
+    action, id = gets.chomp.split(" ", 2) # "show 1" -> ["show", "1"]
+    unless (action == "update-list" || action == "delete-list")
+      [action, id.to_i]
+    else
+      [action, id]
+    end
   end
 
 end
