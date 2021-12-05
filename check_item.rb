@@ -1,7 +1,8 @@
 require "json"
 
 class Check_Item
-  attr_reader :title, :completed
+  attr_reader :title
+  attr_accessor :completed
 
   def initialize(title:, completed: false)
     @title = title

@@ -81,10 +81,10 @@ class Store
       save
   end
 
-  def toggle(index), card
-    list = find_board(board_id)
-    card = find_card(id, list)
-    card.update(new_data)
+  def toggle(item_index,card)
+    card.checklist.each_with_index do |item, index|
+      (item.completed = item.completed ? false : true) if (index + 1) == item_index
+    end
     save
   end
   
@@ -124,3 +124,8 @@ class Store
     end
   end
 end
+
+#objStore = Store.new("store.json")
+#board = objStore.find_board(1)
+#card = objStore.find_card(1, board)
+#objStore.toggle(1, card)

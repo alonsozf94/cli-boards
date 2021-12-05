@@ -97,12 +97,11 @@ class ClinBoards
       # Executes action
       case action
       when "add" then add_check_item(card)
-      when "toggle" then puts toggle(id, card)
+      when "toggle" then toggle(id, card)
       when "delete" then delete_check_item(id, card)
       when "back" then next
       end
     end
-    #card.each_with_index { |check, index| puts "#{check.completed ? '[x]' : '[ ]'} #{index + 1}. #{check.title}" }
   end
 
 
@@ -190,18 +189,7 @@ class ClinBoards
   end
 
   def toggle(index, card)
-    puts "test"
-    #@store.each do |item|
-    #  next unless item.id == id_board.to_i
-#
-    #  item.lists.each do |list|
-    #    list.cards.each do |card|
-    #      next unless card.id == id_list.to_i
-#
-    #      toggle_check(card, index)
-    #    end
-    #  end
-    #end
+    @store.toggle(index, card)
   end
 
   # Deleting objects
