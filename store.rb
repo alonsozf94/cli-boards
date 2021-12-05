@@ -1,5 +1,6 @@
 require "json"
 require_relative "board"
+require_relative "card"
 
 class Store
   attr_reader :boards
@@ -74,10 +75,16 @@ class Store
     save
   end
 
-  def update_card(id, new_data, board_id)
-      list = find_board(board_id)
-      card = find_card(id, list)
+  def update_card(id, new_data, list_name, board_id)
+      board = find_board(board_id)
+      card = find_card(id, board)
+
+      new_card = Card.new(new_data)
+      new_card.id = id
+      delete_card(id, board)
+      add_card(card, list_name, board)
       card.update(new_data)
+      
       save
   end
 

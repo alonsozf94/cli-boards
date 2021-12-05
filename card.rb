@@ -2,7 +2,8 @@ require "json"
 require_relative "check_item"
 
 class Card
-  attr_reader :id, :title, :members, :label, :due_date, :checklist
+  attr_reader :title, :members, :label, :due_date, :checklist
+  attr_accessor :id
   @@id_count = 0
 
   def initialize(title:, id: nil, members:, labels:, due_date:, checklist: [])

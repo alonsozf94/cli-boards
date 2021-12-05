@@ -185,7 +185,7 @@ class ClinBoards
 
   def update_card(id, board)
     new_data = card_form(board)
-    @store.update_card(id, new_data[0], board.id)
+    @store.update_card(id, new_data[0], new_data[1], board.id)
   end
 
   def toggle(index, card)
